@@ -1,4 +1,4 @@
-# An Iterative Traffic-Rule-Based Metamorphic Testing Framework for Autonomous Driving Systems
+![image](https://github.com/user-attachments/assets/6cf959e0-9677-4fb3-ba68-a8fffa5cb285)# An Iterative Traffic-Rule-Based Metamorphic Testing Framework for Autonomous Driving Systems
 Introduction<br>
 This repository is for the paper An Iterative Traffic-Rule-Based Metamorphic Testing Framework for Autonomous Driving Systems to ISSTA.<br>
 
@@ -9,7 +9,9 @@ This figure illustrates the workflow of ITMT, which consists of four main compon
 
 1. The LLM-based MR Generator automatically extracts MRs from traffic rules use file EXP_1.py.
 
-2. The Test Scenario Generator creates continuous driving scenarios through image-to-image translation and diffusion-based image editing techniques.
-You can try 
-
+2. The Test Scenario Generator creates continuous driving scenarios through image-to-image translation and diffusion-based image editing techniques use file EXP_2.py.
+(2.1) You can try Paper_images/test_image.png with prompt "You are driving on the road, add a pedestrian on the road" in <a href='https://huggingface.co/spaces/SkalskiP/FLUX.1-inpaint-dev' target='_blank'>FLUX.1 Inpaint Tool</a>.
+Note: As this demo doesn't support mask uploading, you'll need to manually select the mask area in the lower half of the image, including the road and vehicles.
+(2.2) You can then send this image to <a href='https://huggingface.co/spaces/rerun/Vista' target='_blank'>Vista</a> to generate test scenario.
+Note: As this demo is currently unavailable, you'll need to run file EXP_1.py to see the results. Here are some example results shown below.
 
