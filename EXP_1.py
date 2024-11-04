@@ -21,7 +21,6 @@ def Question_3(MR, traffic_rule,sort, road_network, objects_environment, maneuve
                             4. Object/Environment: One object or environment is specified in the traffic rule.
     # OBJECTIVE # Provide yes/no answers to the given questions based on the provided MR and traffic rule.
     The elements of MR are:MR template.
-Scenario: Ego-vehicle detects the <category>
 Given the Road Network
 When ITMI <modify> the Object/Environment
 Then ego-vehicle should <maneuver>
@@ -31,18 +30,17 @@ Then ego-vehicle should <maneuver>
     - The 'answers' key must contain a list of strings, either 'yes' or 'no'.
     - The number of answers must exactly match the number of questions.
     - Answer 'no' if there's not enough information to answer confidently.'''},
-        {"role": "user", "content": f'''MR: Scenario: Ego-vehicle detects the traffic sign
+        {"role": "user", "content": f'''
     Given the anyroad
-    When ITMI add STOP sign on the roadside
+    When ITMI add STOP sign
     Then ego-vehicle should stop
     Traffic rule: The stop sign means come to a complete stop, yield to pedestrians or other vehicles, and then proceed carefully. 
     Questions:
     1. Is the traffic rule supported by MR?
     2. Are all parts of the MR consistent with each other?
-    3. Is the chosen category appropriate for the described Object/Environment?
-    4. Does the traffic rule support the specified logic "In the Road Network, Object/Environment cause the ego-vehicle to maneuver"?
-    5. Are Road Network, Object/Environment, and all mentioned in the traffic rule?'''},
-        {"role": "assistant", "content": '{"answers": ["yes", "yes", "yes", "yes", "no"]}'},
+    3. Does the traffic rule support the specified logic "In the Road Network, Object/Environment cause the ego-vehicle to maneuver"?
+    4. Are Road Network, Object/Environment, and all mentioned in the traffic rule?'''},
+        {"role": "assistant", "content": '{"answers": ["yes", "yes", "yes", "no"]}'},
         {"role": "user", "content": f'''MR: {MR}
     Traffic rule: {traffic_rule}
 
@@ -82,15 +80,15 @@ def Question_4(MR, traffic_rule,sort, road_network, objects_environment):
         Dot not show any independent vehicle contorl wards like slow down, yield,  prepare to stop in this prompt!.'''},
         {"role": "user",
          "content": """road_network: intersection, objects_environment: a bicycle rider"""},
-        {"role": "assistant", "content": """You are driving towards a busy intersection. A cyclist is driving ahead."""},
+        {"role": "assistant", "content": """ You are driving approach to intersection, a bicycle rider on the road"""},
         {"role": "user",
          "content": """road_network: intersection, objects_environment: turn left sign"""},
         {"role": "assistant",
-         "content": """You are driving towards a busy intersection with a road curving sharply to the left. There are traffic signs indicating a left turn ahead."""},
+         "content": """You are driving approach to intersection, a turn left sign on the road"""},
         {"role": "user",
-         "content": """road_network:  a construction zone, objects_environment: orange traffic control devices"""},
+         "content": """road_network: construction zone, objects_environment: traffic control devices"""},
         {"role": "assistant",
-         "content": """You are driving through a construction zone with orange traffic control devices."""},
+         "content": """You are driving approach to construction zone, a traffic control devices on the road, """},
         {"role": "user", "content": f'''road_network:{road_network},objects_environment:{objects_environment}'''},
     ]#Traffic rule: {traffic_rule},
     return prompt
@@ -127,12 +125,36 @@ class MRGenerator:
             road_network = road_network
             maneuver = maneuver
             object_environment = object_environments[i]
-            if category == "weather":
-                MR = f"""Scenario: Ego-vehicle detects the {category}\nWhen ITMI repalce environment into {object_environment}\nThen ego-vehicle should {maneuver}"""
-            else:
-                MR = f"""Scenario: Ego-vehicle detects the {category}\n Given the {road_network}\nWhen ITMI add {object_environment}\nThen ego-vehicle should {maneuver}"""
+            MR = self.combine_to_MR(maneuver, road_network, object_environments)
+            #if category == "weather":
+            #    MR = combine_to_MR #f"""Scenario: Ego-vehicle detects the {category}\nWhen ITMI repalce environment into {object_environment}\nThen ego-vehicle should {maneuver}"""
+            #else:
+            #    MR = combine_to_MR #f"""Scenario: Ego-vehicle detects the {category}\n Given the {road_network}\nWhen ITMI add {object_environment}\nThen ego-vehicle should {maneuver}"""
             MRs.append(MR)
         return MRs
+
+    def combine_to_MR(self, maneuver, road_network, object_environments):
+        user_message = {
+            "role": "user",
+            "content": f"""
+    # OBJECTIVE
+    Your task is to combine vehicle maneuver, road_network, object_environments into MR.
+    # EXAMPLE
+    Example Text:  maneuver: "slow down", road_network: "unpaved road", object_environment: "vehicle"
+    Example Answer:Given the unpaved road
+    When ITMI add vehicle
+    Then ego-vehicle should slow down
+    Example Text:  maneuver: "stop", road_network: "crosswalk", object_environment: "red light"
+    Example Answer:Given the crosswalk
+    When ITMI add red light
+    Then ego-vehicle should stop
+    User: maneuver: "{maneuver}", road_network: "{road_network}", object_environment: "{object_environments}"
+    """}
+
+       # self.conversation_history.append(user_message)
+        answer = self.LLM(user_message)
+       # self.add_assistant_response(answer)
+        return answer
 
 
     def find_maneuver(self, prompt):
@@ -167,12 +189,13 @@ class MRGenerator:
             # OBJECTIVE #  Your task is to find the most dangerous road_network where ego-vehicle will violate the traffic rule.
             # NOTICE # Generate answer for road_network only. Do not generate other output. Before answering, verify the road_network describes road, not traffic participants.
             road_network only refers to road types, such as: intersection, one-way street, two-way street, roundabout, highway, freeway, residential street, rural road, urban street, bridge, tunnel, parking lot, alley, T-junction, divided highway, bike lane, etc. 
+            The answer must be ONE or TWO words only.
             road_network should not conflict with object_environments. For instance, avoid conflicts between a red arrow light and the lane where a red cross-shaped light or arrow light is active. In case of any conflicts, set road_network to "any road". The answer should not exceed three words.
             # EXAMPLE # 
             Example Text: If you are driving on an unpaved road that intersects with a paved road, you must yield the right-of-way to vehicles traveling on the paved road.
-            Example Answer: the unpaved road 
+            Example Answer: unpaved road 
             Example Text: Steady Red Light (Stop) Stop before entering the crosswalk or intersection. You may turn right unless prohibited by law. You may also turn left if both streets are one way, unless prohibited by law. You must yield to all pedestrians and other traffic lawfully using the intersection.
-            Example Answer: the crosswalk
+            Example Answer: crosswalk
             ===== END OF EXAMPLE ======
             Text: {prompt}
             Answer: """
@@ -193,7 +216,7 @@ class MRGenerator:
         temp_conversation_history.append(user_message)
         answer = self.LLM_1(temp_conversation_history)
         if answer =="True":
-            answer = "any road"
+            answer = "road"
         else:
             answer = prompt
         return answer
@@ -252,16 +275,17 @@ class MRGenerator:
                     # NOTICE # Generate answer for object_environment only. Do not generate other output.
                     Each item in the answer must be a single object_environment. Sentences containing "or" should be split into separate content.
                     Before answering, verify the logic: "In the road_network, object_environment cause the ego-vehicle to maneuver". If this logic doesn't hold true, please don't output this object_environment.
+                    Every object_environment must be ONE to three words only.
                     # EXAMPLE # 
                     Example Text: If you are driving on an unpaved road that intersects with a paved road, you must yield the right-of-way to vehicles traveling on the paved road.
-                    Example Answer: "the right-of-way to vehicles traveling on the paved road"
+                    Example Answer: "vehicle"
                     Example Text: Steady Red Light (Stop) Stop before entering the crosswalk or intersection. You may turn right unless prohibited by law. You may also turn left if both streets are one way, unless prohibited by law. You must yield to all pedestrians and other traffic lawfully using the intersection.
-                    Example Answer: "a steady red light"
+                    Example Answer:  "red light"
                     Example Text: If an emergency medical vehicle, law enforcement vehicle, fire truck, tow truck, utility service vehicle, Texas Department of Transportation vehicle (TxDOT, or other highway construction or maintenance vehicle) is stopped on the road with its lights activated (the lights are on or flashing), then the driver is required: 1. To reduce his/her speed to 20 mph below the speed limit; or 2. Move out of the lane closest to the emergency medical vehicle, law enforcement vehicle, fire truck, tow truck or a TxDOT vehicle if the road has multiple lanes traveling in the same direction.
 There are other instances where it is important to be observant of vehicles stopped on the road. Mail, delivery, and trash-collection vehicles often make frequent stops in the roadway. Drivers must proceed with caution, and, if possible, change lanes before safely passing one of these vehicles on the road.
-                    Example Answer: "a stopped emergency medical vehicle with activated lights", "a stopped law enforcement vehicle with activated lights", "the stopped fire truck with activated lights", "the stopped tow truck with activated lights", "the stopped utility service vehicle with activated lights", "the stopped Texas Department of Transportation vehicle with activated lights", "a stopped highway construction vehicle with activated lights", "a stopped highway maintenance vehicle with activated lights", "a stopped mail vehicle, the stopped delivery vehicle", "a stopped trash-collection vehicle"
+                    Example Answer: "emergency medical vehicle", "enforcement vehicle", "fire truck", "tow truck", "utility service vehicle", "Texas Department vehicle", "highway construction vehicle", "highway maintenance vehicle", "mail vehicl", "trash-collection vehicle"
                     Example Text: Lane signal lights indicate: (1) When the green arrow light is on, allow vehicles in the lane to pass in the direction indicated; (2) When the red cross-shaped light or arrow light is on, vehicles in the lane are prohibited from passing.
-                    Example Answer: "a red cross-shaped light","a red arrow light"
+                    Example Answer: "red light"
                     Example Text: Flashing red light: Vehicles and streetcars/trams must stop at the stopping point before proceeding.
                     Example Answer: "flashing red light"
                     Example Text: Slow down on wet road. Do not suddenly turn, speed up, or stop.
@@ -348,7 +372,8 @@ There are other instances where it is important to be observant of vehicles stop
         road_network = self.find_road_network(prompt)
         object_environments = self.find_object_environment(prompt)
         road_network = self.check_conflict(road_network)
-        categorys = self.find_category(maneuver, object_environments)
+        #categorys = self.find_category(maneuver, object_environments)
+        categorys = 0
         MRs = self.apply_MR(categorys, road_network, object_environments, maneuver)
         return prompt,maneuver,road_network,object_environments,categorys,MRs
 
@@ -357,8 +382,6 @@ There are other instances where it is important to be observant of vehicles stop
         for j in range(self.L):
             llm_scores = 0  # 用于存储每个LLM的总分
             llm_count = 0  # 用于存储每个LLM的有效评分次数
-
-
             prompt, maneuver, road_network, object_environments, categorys, MRs = self.find_elements(traffic_rule)
             for i in range(len(object_environments)):
                 category = categorys[i]
@@ -388,9 +411,6 @@ There are other instances where it is important to be observant of vehicles stop
 
     def get_conversation_history(self):
         return self.conversation_history
-
-import random
-
 if __name__ == "__main__":
     Texas = [
         'If you are driving on an unpaved road that intersects with a paved road, you must yield the right-of-way to vehicles traveling on the paved road.',
@@ -638,18 +658,14 @@ if __name__ == "__main__":
                 #"idx":idx,
                 "idx_new": idx_1,
                 #"prompt": prompt,
-                #"road_network": road_network,
-               # "objects_environment": object_environment,
+                "road_network": road_network,
+                "objects_environment": object_environment,
                 "maneuver": maneuver,
                 #"category": category,
-                #"MR": MR,
-                #"score": score,
+                "MR": MR,
+                "score": score,
                 "diffusion_prompt": diffusion_prompt,
                 "type":type
             }
             data_lists.append(data)
             idx_1+=1
-
-    with open( os.path.join("Data", "Texas_final.json"), 'w', encoding='utf-8') as f:
-        json.dump(data_lists, f, ensure_ascii=False, indent=4)
-
