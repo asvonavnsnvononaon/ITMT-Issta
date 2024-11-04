@@ -27,3 +27,5 @@ Note: As this demo is currently unavailable, you'll need to run file EXP_1.py to
     <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/8.gif" width="30%">
 </div>
 <br>
+Since EXP_2.py needs to process the dataset, we will describe in detail how to compose the dataset below.
+
