@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/6cf959e0-9677-4fb3-ba68-a8fffa5cb285)# An Iterative Traffic-Rule-Based Metamorphic Testing Framework for Autonomous Driving Systems
+# An Iterative Traffic-Rule-Based Metamorphic Testing Framework for Autonomous Driving Systems
 Introduction<br>
 This repository is for the paper An Iterative Traffic-Rule-Based Metamorphic Testing Framework for Autonomous Driving Systems to ISSTA.<br>
 
@@ -14,4 +14,14 @@ This figure illustrates the workflow of ITMT, which consists of four main compon
 Note: As this demo doesn't support mask uploading, you'll need to manually select the mask area in the lower half of the image, including the road and vehicles.
 (2.2) You can then send this image to <a href='https://huggingface.co/spaces/rerun/Vista' target='_blank'>Vista</a> to generate test scenario.
 Note: As this demo is currently unavailable, you'll need to run file EXP_1.py to see the results. Here are some example results shown below.
-
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+    <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/0.gif" width="30%">
+    <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/1.gif" width="30%">
+    <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/2.gif" width="30%">
+    <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/3.gif" width="30%">
+    <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/4.gif" width="30%">
+    <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/5.gif" width="30%">
+    <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/6.gif" width="30%">
+    <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/7.gif" width="30%">
+    <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/8.gif" width="30%">
+</div>
