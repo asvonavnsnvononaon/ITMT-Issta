@@ -27,5 +27,15 @@ Note: As this demo is currently unavailable, you'll need to run file EXP_1.py to
     <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/8.gif" width="30%">
 </div>
 <br>
-Since EXP_2.py needs to process the dataset, we will describe in detail how to compose the dataset below.
+Since EXP_2.py needs to process the dataset, we will describe in detail how to compose the dataset below.<br>
+This project is based on two well-known autonomous driving datasets: A2D2 and Udacity. To process the data, you first need to download these datasets:<br>
+
+Udacity: <a href='https://github.com/udacity/self-driving-car?tab=readme-ov-file' target='_blank'>Self-Driving Car</a><br>
+Notice: Due to privacy and data usage restrictions, we cannot provide direct download links for the Udacity dataset. Please obtain it through official channels.<br>
+A2D2: <a href='https://www.a2d2.audi/a2d2/en.html' target='_blank'>A2D2</a><br>
+
+For the Udacity dataset, we use HMB1, HMB2, HMB4, and HMB6 as training and validation sets, while HMB5 serves as the test set. For the A2D2 dataset, we combine data from Gaimersheim, Ingolstadt, and Munich regions, which are then proportionally split into training, validation, and test sets.<br>
+
+
+
 Coming soon.
