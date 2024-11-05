@@ -28,6 +28,8 @@ Note: As this demo is currently unavailable, you'll need to run file EXP_1.py to
 </div>
 <br>
 Since EXP_2.py needs to process the dataset, we will describe in detail how to compose the dataset below.<br>
+
+Here's how we organize our data format - simply place the corresponding driving scenario data into the appropriate folders as shown in the repository.<br>
 This project is based on two well-known autonomous driving datasets: A2D2 and Udacity. To process the data, you first need to download these datasets:<br>
 
 Udacity: <a href='https://github.com/udacity/self-driving-car?tab=readme-ov-file' target='_blank'>Self-Driving Car</a><br>
