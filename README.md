@@ -38,6 +38,12 @@ A2D2: <a href='https://www.a2d2.audi/a2d2/en.html' target='_blank'>A2D2</a><br>
 
 For the Udacity dataset, we use HMB1, HMB2, HMB4, and HMB6 as training and validation sets, while HMB5 serves as the test set. For the A2D2 dataset, we combine data from Gaimersheim, Ingolstadt, and Munich regions, which are then proportionally split into training, validation, and test sets.<br>
 
+After organizing the data, run main.py which includes the following steps:<br>
 
+data_process.data_process(args) - Downsamples images and pairs sensor data<br>
+OneFormer.Check_OneFormer(args) - Generates semantic segmentation results<br>
+data_process.resize_images(args,"ORA") - Resizes images to 320x160 for training<br>
+data_process.prepare_data(args) - Loads data into PyTorch structure<br>
+train_ADS.Train(args) - Trains the autonomous driving system<br>
 
 Coming soon.
