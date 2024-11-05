@@ -27,58 +27,6 @@ import engine.test_ADS as test_ADS
 from imagecorruptions import get_corruption_names
 
 
-def Equality_MRs(args):
-    with open(os.path.join(args.data_file, "MT_results", "Texas_final.json"), 'r', encoding='utf-8') as file:
-        MRs = json.load(file)
-    MR = random.choice(MRs)
-    args.pre_series = 1
-    #corruption_names=['defocus_blur','motion_blur','zoom_blur','snow','gaussian_noise', 'shot_noise', 'impulse_noise',
-    # 'frost','fog','brightness','cont                                                                                                                                                                                                                                                                  rast','elastic_transform','pixelate','jpeg_compression']
-    corruption_names=['defocus_blur','gaussian_noise', 'fog','brightness','jpeg_compression']
-    coorps = ["DeepTest_" + effect for effect in corruption_names]
-    #random.shuffle(coorps)
-    cont = 0
-    data_lists = []
-    for i in tqdm(range(len(coorps))):
-        MR["idx_new"] ="DeepTest_" + str(i)
-        MR["type"] = "Pix2Pix"
-        MR["diffusion_prompt"] = coorps[i]
-        MR["MR"] = corruption_names[i]
-        MR["maneuver"] = "no change"
-        #MT.MT(args, MR)
-        cont+=1
-        data_str = MT.MT_ADS(args, MR)
-        print(data_str)
-        data_lists.append(data_str)
-    test_ADS.save_data_lists_to_json(data_lists,"result.json")
-
-def Test(args,type,pre_series=1):
-    args.pre_series = pre_series
-    with open(os.path.join("engine",  "Texas_final.json"), 'r', encoding='utf-8') as file:
-        MRs = json.load(file)
-    type_specific_MRs = [mr for mr in MRs if mr["type"] == type]
-    for i in range(len(type_specific_MRs)):
-        selected_MR = type_specific_MRs[i]# random.choice(type_specific_MRs)
-        MT.MT(args, selected_MR)
-def Test_1(args,type,pre_series=1):
-    args.pre_series = pre_series
-    with open(os.path.join("engine",  "Texas_final.json"), 'r', encoding='utf-8') as file:
-        MRs = json.load(file)
-    MT.MT_1(args,type,MRs)
-
-
-def Test_ADS(args,type="Equality_MRs"):
-    with open(os.path.join(args.data_file, "MT_results", "Texas_final.json"), 'r', encoding='utf-8') as file:
-        MRs = json.load(file)
-    data_lists = []
-
-    type_specific_MRs = [mr for mr in MRs if mr["type"] == type]
-    for i in tqdm(range(5)):
-        selected_MR = type_specific_MRs[i]  # random.choice(type_specific_MRs)
-        data_str = MT.MT_ADS(args, selected_MR)
-        data_lists.append(data_str)
-        print(data_str)
-    test_ADS.save_data_lists_to_json(data_lists,"result.json")
 
 if __name__ == "__main__":
     args = Paramenters.parse_args()
