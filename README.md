@@ -13,7 +13,8 @@ This figure illustrates the workflow of ITMT, which consists of four main compon
 (2.1) You can try Paper_images/test_image.png with prompt "You are driving on the road, add a pedestrian on the road" in <a href='https://huggingface.co/spaces/SkalskiP/FLUX.1-inpaint-dev' target='_blank'>FLUX.1 Inpaint Tool</a>.<br>
 Note: As this demo doesn't support mask uploading, you'll need to manually select the mask area in the lower half of the image, including the road and vehicles.<br>
 (2.2) You can then send this image to <a href='https://huggingface.co/spaces/rerun/Vista' target='_blank'>Vista</a> to generate test scenario.<br>
-Note: As this demo is currently unavailable, you'll need to run file EXP_1.py to see the results. Here are some example results shown below.<br>
+Note: 1.If the online demo is unavailable, we recommend using other text-to-video models such as <a href='https://huggingface.co/spaces/wangfuyun/AnimateLCM-SVD' target='_blank'>AnimateLCM-SVD</a> for generating driving scenarios. However, please be aware that models not specifically trained on driving datasets may generate videos with non-forward-facing perspectives.<br>
+2.Due to GPU memory constraints, we use a parameter-reduced version of Vista that requires only 24GB VRAM. For potentially better performance, you can try the original Vista model at <a href='https://github.com/OpenDriveLab/Vista' target='_blank'>OpenDriveLab/Vista</a> (requires 40GB VRAM).<br>
 (2.3) For environmental changes like weather conditions, we employ  <a href='https://huggingface.co/spaces/timbrooks/instruct-pix2pix' target='_blank'>InstructPix2Pix</a>. You can try Paper_images/test_image.png with prompt "turn this image  dusk" in this web.<br>
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
     <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/0.gif" width="30%">
