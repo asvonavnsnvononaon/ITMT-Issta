@@ -5,7 +5,7 @@ This repository is for the paper An Iterative Traffic-Rule-Based Metamorphic Tes
 <img src="https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/Paper_images/overview%20of%20ITMT.png" width="60%"/>
  
 
-This figure illustrates the workflow of ITMT, which consists of four main components. First, the LLM-based MR Generator automatically extracts MRs from traffic rules (Section 3.2). These MRs are expressed in Gherkin syntax to ensure structured and readable test scenarios. Second, the Test Scenario Generator creates continuous driving scenarios through image-to-image translation and diffusion-based image editing techniques (Section 3.3). Third, the Metamorphic Relations Validator verifies whether the model predictions satisfy the defined MRs (Section 3.4).<br>
+This figure illustrates the workflow of ITMT, which consists of four main components. First, the LLM-based MR Generator automatically extracts MRs from traffic rules (Section 3.2). These MRs are expressed in Gherkin syntax to ensure structured and readable test scenarios. Second, the Test Scenario Generator creates continuous driving scenarios through image-to-image translation and diffusion-based image editing techniques (Section 3.3). Third, the Metamorphic Relations Validator verifies whether the model predictions satisfy the defined MRs (Section 3.4). Since individual MRs only capture specific driving scenarios, we introduce an Iterative Testing Generator (Section 3.5) to explore the model's boundaries more thoroughly.<br>
 
 # 1. MRs Generator
  The LLM-based MR Generator automatically extracts MRs from traffic rules use file <a href='https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/EXP_1.py' target='_blank'>EXP_1.py</a>.<br>
@@ -80,5 +80,38 @@ Run with different evaluation modes:<br>
 Set type=2 to get vision LLM evaluation results,Set type=3 to use LLM to analyze results<br>
 Advanced Analysis Recommendation:<br>
 SoTA LLMs can provide more accurate analysis results. Due to token limitations in analyzing large numbers of scenarios, we recommend using web-based LLMs (such as ChatGPT, Claude) for better analysis. Input vision LLM results and use the following prompt:<br>
-Please find the number of scenarios that not match the metamorphic testing prompt .... Ensure the discribe of image quality is good. Only provide the scenario numbers.
-Coming soon.
+Please find the number of scenarios that not match the metamorphic testing prompt .... Ensure the discribe of image quality is good. Only provide the scenario numbers.<br>
+For video generation, please download the Vista source code from <a href='https://github.com/OpenDriveLab/Vista' target='_blank'>Vista</a> and place it in the <a href='https://github.com/asvonavnsnvononaon/ITMT-Issta/tree/main/Other_tools/Vista' target='_blank'>Other_tools/Vista/</a> directory.<br>
+
+# 3. The comparison of approaches
+Exp1: Pedestrian Testing<br>
+Run with exp_3_1(args, save_path="Exp_3_1", type=X) at <a href='https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/EXP_3.py' target='_blank'>EXP_3.py</a>:<br>
+ITMT: type=1<br>
+RMT: type=2<br>
+MetaSEM: type=3<br>
+Exp2: Weather Testing<br>
+Run with exp_3_2(args, save_path="Exp_3_2", type=X) at <a href='https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/EXP_3.py' target='_blank'>EXP_3.py</a>:<br>
+ITMT: type=1<br>
+DeepRoad: type=2<br>
+DeepTest: type=3<br>
+
+# 4.  Iterative Testing Generator
+Test Methodology using EXP_4.py<br>
+Check the code at <a href='https://github.com/asvonavnsnvononaon/ITMT-Issta/blob/main/EXP_4.py' target='_blank'>EXP_4.py</a><br>
+Exp1: Deceleration Testing<br>
+Test Type: "Exp_1"<br>
+MRs: [0, 1, 2, 4, 5, 6, 7, 9, 10, 11]<br>
+Expected Action: "slow down"<br>
+Model Under Test: Speed prediction model<br>
+Threshold: α = -0.3, β = 0<br>
+Exp2: Steering Angle Testing<br>
+Test Type: "Exp_2"<br>
+MRs: [0, 1, 2, 5, 6, 7, 8, 10, 11, 14]<br>
+Expected Action: "keep the same"<br>
+Model Under Test: Steering angle prediction model<br>
+Threshold: α = -0.1, β = 0.1<br>
+For both experiments:<br>
+
+Selects best MR and worst MR <br>
+Uses iterative process with test_round = 4<br>
+Run with: EXP_Class_1(args, Test_type="Exp_1") or EXP_Class_1(args, Test_type="Exp_2")<br>
