@@ -1,0 +1,4 @@
+1.conda create --name RMT_LLM python=3.9
+conda activate RMT_LLM
+2.pip install -r requirements.txt
+3.
